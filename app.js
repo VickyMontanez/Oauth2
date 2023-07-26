@@ -1,5 +1,8 @@
-import { Express } from "express";
+import express from "express";
 import session from "express-session";
+import passportHelper from './helpers/passportHelper.js';
+import authRouter from './routers/authRouter.js';
+import checkAuthentication from './helpers/authentication.js';
 
 const app = express();
 
