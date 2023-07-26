@@ -1,5 +1,5 @@
-import express from 'express';
-import session from 'express-session';
+import { Express } from "express";
+import session from "express-session";
 
 const app = express();
 
@@ -10,6 +10,14 @@ app.use(session({
     saveUninitialized: false
 }));
 
+app.use(passportHelper.initialize());
+app.use(passportHelper.session());
+
+app.use(express.static('public'))
+
+
+app.get('/', (req, res) => res.redirect('/login'));
+app.use('/login', authRouter);
 
 
 app.listen(3000, () => {
