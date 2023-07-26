@@ -18,6 +18,7 @@ app.use(express.static('public'))
 
 app.get('/', (req, res) => res.redirect('/login'));
 app.use('/login', authRouter);
+app.get('/dashboard', checkAuthentication,  (req, res) => {res.sendFile('dashboard.html', { root: './public' })});
 
 
 app.listen(3000, () => {
