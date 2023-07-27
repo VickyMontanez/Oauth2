@@ -3,31 +3,37 @@ import {Strategy as DiscordStrategy} from "passport-discord";
 import {Strategy as GoogleStrategy} from "passport-google-oauth2";
 import {Strategy as FacebookStrategy} from "passport-facebook";
 import {Strategy as TwitterStrategy} from "passport-twitter";
+import dotenv from 'dotenv';
 
-const authUser = (accessToken, refreshToken, profile, done)=>{
-    console.log("accessToken", accessToken)
-    console.log("refreshToken", refreshToken);
-    console.log("profile", profile);
-    done(null, profile);
+dotenv.config();
+const keyDiscord = JSON.parse(process.env.MY_DISCORD_KEYS);
+const keyGoogle = JSON.parse(process.env.MY_GOOGLE_KEYS)
+
+const authUser = (accessToken, refreshToken, profile, cb)=>{
+    process.nextTick(() => {
+        return cb(null, profile)
+    })
 };
 
+const scopes = ['identify', 'email', 'guilds', 'guilds.join'];
 passport.use(
     new DiscordStrategy(
         {
-            clientID:"1133681110937767947",
-            clientSecret: "5Tw1yjBP97OPhnK8FhIzZLAZvQgPmAe8",
-            callbackURL:"http://localhost:3000/login/discord/callback"
+            clientID: keyDiscord.clientID,
+            clientSecret: keyDiscord.clientSecret,
+            callbackURL: keyDiscord.callbackURL,
+            scope: scopes
         },
         authUser
-    )
-);
+    ));
 
 passport.use(
     new GoogleStrategy(
         {
-            clientID:"1058271595537-cmpibelf3q5tldhj0d664hjhkat36av9.apps.googleusercontent.com",
-            clientSecret:"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",
-            callbackURL:"http://localhost:3000/login/google/callback"
+            clientID: keyGoogle.clientID,
+            clientSecret: keyGoogle.clientSecret,
+            callbackURL: keyGoogle.callbackURL,
+            scope: scopes
         },
         authUser
     )
@@ -55,14 +61,14 @@ passport.use(
     )
 ); */
 
-passport.serializeUser((user, done) => {
+passport.serializeUser((user, cb) => {
     console.log("serializeUser");
-    done(null, user);
+    cb(null, user);
 });
 
-passport.deserializeUser((user, done) => {
+passport.deserializeUser((user, cb) => {
     console.log("deserializeUser");
-    done(null, user);
+    cb(null, user);
 });
 
 export default passport;
